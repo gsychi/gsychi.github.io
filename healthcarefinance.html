@@ -5,7 +5,7 @@
     <title>A Crazy Healthcare Idea in Finance</title>
 
     <meta charset="UTF-8">
-    <meta name="description" content="anonymous quant musings">
+    <meta name="description" content="interesting thoughts">
     <meta name="author" content="Anonymous">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <link rel="stylesheet" href="index.css">
@@ -19,7 +19,7 @@
         <center><h1>A Crazy Healthcare Idea in Finance</h1></center>
         <br>
         <center> <img src="hc2.png" width="70%"> </center>
-        <p><b>Disclaimer: I am not a causal inference expert by any stretch but I do think the idea is pretty cool and worth a discussion, email me at </b><span style="text-decoration: underline;"><b>randomquantmusings@gmail.com</b></span><b> if you have any feedback</b></p>
+        <p><b>Disclaimer: I am not a causal inference expert by any stretch but I do think the idea is pretty cool and worth a discussion, email me at </b><span style="text-decoration: underline;"><b>gsychi@stanford.edu</b></span><b> if you have any feedback</b></p>
         <h2><b>Introduction</b></h2>
         <p>Treatment effects are an ubiquitous field of study in healthcare, either in attempts to model the true impact of a habit, i.e understanding the impact of smoking on some certain metric of people&rsquo;s health, or determining when to make an important treatment decision. As a motivating example for the latter point, consider a time series problem in healthcare where hospitals need to determine the optimal time to release a patient from the emergency room: we want to release a patient at the first time t where there is more benefit to release a patient (treatment T=1) than to keep them in hospital (treatment T=0). (Note: there are a lot more assumptions that need to be fulfilled for a model on the above task to hold, but this is just here to provide an intuition on determining a numerical value of treatment effect)</p>
         <p>This intuition is behind the definition of average treatment effect (ATE), which measures the difference in mean outcomes between units assigned to treatment and units assigned to control. For binary decisions, the treatment effect for a given patient with features X with outcomes Y</p>
