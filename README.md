@@ -1,1 +1,2 @@
-# gsychi.github.io
+# rqmusings.github.io
+website with random musings about quantitative possibilities

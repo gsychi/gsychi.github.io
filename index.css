@@ -1,0 +1,49 @@
+/* GENERAL PAGE RULES */
+
+body {
+    font-family: "Karla";
+    font-size: 1em;
+    line-height: 1.5em;
+    font-weight: 500;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+#holder {
+    margin-top: 25px;
+    margin-bottom: 25px;
+    display: flex;
+}
+
+#left {
+    padding-left: 10%;
+    max-width:5em;
+}
+
+#middle {
+    max-width:40em;
+}
+
+#right {
+    padding-left: 15%;
+    flex-grow: 100;
+}
+
+a {
+    color:#0d29fd;
+}
+
+a:hover {
+    color:#fd0d8d;
+}
+
+#one{
+    vertical-align: middle;
+    display: inline-block;
+    line-height: 20px;
+    height: 15px;
+    font-size:1.5em;
+    color: #fd0d8d;
+}
