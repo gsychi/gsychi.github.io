@@ -18,7 +18,7 @@
         <div id='middle'>
         <center><h1>A Crazy Healthcare Idea in Finance</h1></center>
         <br>
-        <center> <img src="hc2.png" width="70%"> </center>
+        <center> <img src="images/hc2.png" width="70%"> </center>
         <p><b>Disclaimer: I am not a causal inference expert by any stretch but I do think the idea is pretty cool and worth a discussion, email me at </b><span style="text-decoration: underline;"><b>gsychi@stanford.edu</b></span><b> if you have any feedback</b></p>
         <h2><b>Introduction</b></h2>
         <p>Treatment effects are an ubiquitous field of study in healthcare, either in attempts to model the true impact of a habit, i.e understanding the impact of smoking on some certain metric of people&rsquo;s health, or determining when to make an important treatment decision. As a motivating example for the latter point, consider a time series problem in healthcare where hospitals need to determine the optimal time to release a patient from the emergency room: we want to release a patient at the first time t where there is more benefit to release a patient (treatment T=1) than to keep them in hospital (treatment T=0). (Note: there are a lot more assumptions that need to be fulfilled for a model on the above task to hold, but this is just here to provide an intuition on determining a numerical value of treatment effect)</p>
@@ -58,7 +58,7 @@
         <p>If x has m variables, this thus results in a linear regression on<em> m(k+1)</em> variables.</p>
         <p>As a conclusion, given a fixed X and a linear model in the above format, we get to see how the treatment effect changes the outcome Y; we can construct a plot of T.</p>
         <p>This conclusion can be met with a discussion on training and potential financial applications:</p>
-        <center> <img src="stocks.png" width="70%"> </center>
+        <center> <img src="images/stocks.png" width="70%"> </center>
         <br>
         <h2><b>A Financial Application of ATE</b></h2>
         <p>I will preface this discussion by saying that I believe that my proposed model is likely to be most useful for high-frequency trading (HFT).<sup>1</sup> However, for an independent trader, I believe there is more alpha in mid-frequency trading (MFT): after all, I do not have that much confidence in my ability to generate a model with enough latency <span style="text-decoration: underline;"><b>AND</b></span> accuracy to beat HRT, Virtu, Citadel unfortunately. The reason this matters is because the field of high-frequency trading is particularly unforgiving, where the winner takes all.</p>
