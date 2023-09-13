@@ -17,12 +17,58 @@
         <div id='left'></div>
         <div id='middle'>
         <center><h1>Volatility Modelling</h1>
-        <h3>A New Approach to Chess Cheating Detection</h3></center>
+        <h2>A New Approach to Chess Cheating Detection</h2></center>
         <br>
         <center> <img src="images/chess.png" width="60%"> </center>
         <br>
-        <h1> Introduction </h1>
-        
+        <center><blockquote class="twitter-tweet"><p lang="en" dir="ltr">I&#39;ve seen a lot of discussion on chess cheating detection in the past year or so -- Hans Niemann incident and whatnot -- and it&#39;s led me to think about modelling projects regarding this, given my background in finance, chess variants and AI research. 1/16</p>&mdash; Gordon C (@gsychi) <a href="https://twitter.com/gsychi/status/1665914475692851200?ref_src=twsrc%5Etfw">June 6, 2023</a></blockquote></center> <script async src="https://platform.twitter.com/widgets.js" charset="utf-8"></script>
+        <h2><b>Introduction</b></h2>
+        <p>Online chess has changed the game in positive aspects: at the advent of the COVID-19 pandemic, chess interest and viewership reached an all-time high amongst the general Western population. However, online chess also opens the Pandora box to a rampant issue of the game -- cheating.</p>
+        <p>There once was a time where humans were stronger than the best computer programs at the game, but this time is long gone. In 2023, even a simple free app running on your smartphone has the ability to beat the top chess grandmasters 100 out of 100 times, and this spells trouble for the integrity of the game. Any enthusiast of the game is able to plug the game position into a chess engine and play a superhuman move against a human. Often, such behaviour can be detected; however, top players with a better understanding  of the game can potentially earn online prize money undetected. There's paranoia, but it's grounded in reality: there have been so many high profile cases of cheating in the past couple of years, from the entire Hans Niemann scandal to Tigran Petrosian's famous "PIPI in pampers" quote to Tal Baron's cheated Titled Tuesday Win and more. Unfortunately, these may only be the tip of the iceberg: for every convicted cheater, there are many more incidents that our current approaches are just too uncertain at spotting.</p>
+        <p>The two main online chess websites, lichess.org (the better site on average) and chess.com, have some cheat detection approaches, not all of which is public information. As it stands, discretionary methods (i.e. a grandmaster looks through a game and determines suspicion) trump current statistical methods, but a downside is that human intuition may be biased by personal priors or favoritism. Let's begin this article, then, by discussing the few key features people use as evidence for reaching a conclusion.</p>
+        <h2><b>Approaches</b></h2>
+        <p>Here, we will consider all approaches purely based off of accessible information of the game (i.e. no information on suspicious user mouse clicks, browser activity and/or script injection that only website owners and/or advanced programmers can access). There are three main ideas that many people like to cite:</p>
+        <ol>
+        <li>
+        <p>Low average centipawn loss</p>
+        </li>
+        <li>
+        <p>Suspicious time usage</p>
+        </li>
+        <li>
+        <p>High agreement with stockfish top n pv</p>
+        </li>
+        </ol>
+        <p>All these are reasonable first steps in detecting cheaters, but they are by no means conclusive:</p>
+        <p>(1) low average centipawn loss is meaningless in games where an opponent blunders early on and all moves are winning, or in positions when the board is extremely simplified; (2) time usage is good at identifying 'flat' move times and will result in minimal false positive rate but is by no means able to catch even a majority of cheaters, and;</p>
+        <p>(3) high agreement with stock top n pv is dependent on the assumption all engines have similar suggestions.</p>
+        <p>We now consider how online chess sites have tried to find solutions to the above metrics/how they work towards cheat detection -- let's use lichess.org (as chess.com claims that explaining their cheat detection method will ruin their approach). To tackle the issue of ACPL, lichess propose the concept of an 'Accuracy%' that computes Win % as sigmoid(acpl). This theoretically eliminates the ability to 'game' the ACPL system by choosing a less accurate move once the game is winning -- and it is a step in the right direction. But it's not quite nearly enough. Irwin and Kaladin are two other ML solutions that Lichess uses, but the issues with it have been covered in great depth by other scientists out there (see <a href="https://lichess.org/forum/general-chess-discussion/analysis-of-lichess-cheating-detection-with-machine-learning-ml-a-mis-use-of-ml--doesnt-work" target="_blank">here</a>). In short, inputs and the CNN model choice seem non-refined (probably a result of trial and error), and the training labels are based off of trying to emulate human decision-making in the past (which may contain the bias we are trying to eliminate!)</p>
+        <h2><b>A Unique Solution</b></h2>
+        <p>Enter financial modelling. In the field of time-series problems for pricing derivatives, models such as GARCH and ARIMA models tend to be quite useful: not all observed outcomes are expected, so these models introduce 'random walk' terms to account for volatility in the real world. Volatility is a huge need in predictive modelling -- from options trading to the VIX ticker, it is something that we require in order to make better reads on the value of the world. And it can be used to convert human intuition into statistical methods for cheat detection.</p>
+        <p>In short, I believe that all current cheat detection models fall under one of two umbrella mathematical models:</p>
+        <ol>
+        <li>
+        <p>p(game played by player A over computer | game moves + time usage + elo), i.e. log likelihood of moves given elo [see: Irwin, Kaladin]</p>
+        </li>
+        <li>
+        <p>E[elo | moves in game + time usage], i.e. the expected ELO of somebody playing this game (time usage and stockfish top n pv heuristics fall under point 1, whereas acpl loss fall under point 2, i.e. "no way a 2000 player just played a 5 acpl game!")</p>
+        </li>
+        </ol>
+        <p>My claim here, then, is that these mathematical choices are employed by most chess detection sites, but do not function under volatility.</p>
+        <h2><b>How would it work?</b></h2>
+        <p>Here's an explanation of how building a volatility feature could work:</p>
+        <p>Suppose there exists an objective volatility score for a given board configuration B<sub>t</sub> at ply t, which can be evaluated as a composite function of heatmaps (how uncommon a piece is to be at a certain position in this given B<sub>t</sub>), material differences (i.e. piece imbalances and/or pawn position imbalances etc), difference in pv evaluations by stockfish. We note that all downstream tasks are affected by how well this score works, but we know that there is some pre-built understanding of this, given that most SoTA chess engines have pretty intelligent time management pipelines; and, even in the worst case, we can backtest such metric with human evaluation.</p>
+        <p>Further assume that there exists a confidence interval function for a move m<sub>t</sub> in a position B<sub>t</sub>, given ELO x, i.e. f(m<sub>t</sub> | B<sub>t</sub>, x) that models the 95% human evaluation of a given position. Now, the above cheat detection models above have a much different meaning:</p>
+        <h3>Revised 1:</h3>
+        <p> P(game played by player A over computer | game moves, time usage, elo, volatility scores) is an explanation on an appetite for board volatility -- it becomes a lot easier to identify how much volatility a player is willing to take given a certain position.</p>
+        <p><b><u>Motivation:</u></b>  for strong players, it makes very little sense to take on a high volatility score in a position that is obviously winning, which makes it more 'possible' to choose a +3 move up a bishop over a +8 'computerized' line with only one winning variation.</p>
+        <h3>Revised 2:</h3>
+        <p> E[elo | moves in game, time usage, volatility scores]. This is a way to overcome the shortcomings of ACPL and identify what it truly means to make accurate moves, both in winning or losing positions.</p>
+        <p><b><u>Motivation:</u></b>   Let's say we observe a high ACPL in complicated or losing positions. This doesn't mean that a user isn't cheating! Here, such scenarios are accounted for by the volatility confidence intervals -- it's hard to find good moves, and going for complications is the only way to move forward.  'Selective' cheaters may still have a high ACPL game, but still find a superhuman move in a complicated position above a normal threshold, and this would be the first way to convert that human intuition into statistical evidence.</p>
+        <p>In an alternate scenario, let's say we find a relatively low ELO player play an almost 'perfect' game with low ACPL (or high CAPS score as reported by chess.com). This also doesn't mean that a user is cheating! In a +30 position up a queen with zero counterplay, the position could be completely trivial, where even a 1400 can play perfectly with minimal mistakes. It would be unwise to suspect cheating in such an untested game.</p>
+        <h2><b>Conclusion</b></h2>
+        <p>Online chess and prize tournaments bring the benefits of comfort and accessibility, but cheating is the one thing that destroys its integrity. Rather than forcing all tournaments to be video monitored (which isn't even perfect, as we have seen multiple times before) or promote primarily bullet (1 minute) chess, we should also look towards smarter, more statistically-informed ways to combat the behavior of a select minority.</p>
+
         
         <a href="air.html">back</a>
         </div>
